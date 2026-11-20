@@ -1,29 +1,33 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-// Import Layout dùng chung
-import Layout from './components/Layout';
+// Context giỏ hàng dùng chung toàn ứng dụng
+import { CartProvider } from './context/CartContext';
 
-// Import các trang
-import Home from './pages/Home';
-import RestaurantList from './pages/RestaurantList';
-import RestaurantMenu from './pages/RestaurantMenu';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
+// Import đúng tên các page đã tạo
+import HomePage from './pages/HomePage';
+import RestaurantsPage from './pages/RestaurantsPage';
+import MenuPage from './pages/MenuPage';
+import SearchPage from './pages/SearchPage';
+import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Layout sẽ bọc bên ngoài tất cả các trang con */}
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="restaurants" element={<RestaurantList />} />
-          <Route path="restaurant/:id" element={<RestaurantMenu />} />
-          <Route path="cart" element={<Cart />} />
-          <Route path="checkout" element={<Checkout />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <CartProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/restaurants" element={<RestaurantsPage />} />
+          <Route path="/restaurants/:id/menu" element={<MenuPage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+
+          {/* Điều hướng về Trang chủ nếu nhập sai đường dẫn */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </CartProvider>
   );
 }
