@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5001/api";cd
+const API_URL = "http://localhost:5001/api";
 
 export async function fetchFoods({ q = '', category = '', restaurantId = '', popular = '' } = {}) {
   const params = new URLSearchParams({ q, category, restaurantId, popular });
