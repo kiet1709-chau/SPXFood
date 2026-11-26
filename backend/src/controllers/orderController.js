@@ -13,17 +13,23 @@ export const createOrder = async (req, res) => {
       address,
       note = "",
       paymentMethod = "COD",
+      items: bodyItems = [],
     } = req.body;
 
-    const cart = await Cart.findOne({ userId });
-    const items = cart ? cart.items : [];
+    // Tìm giỏ hàng theo userId, nếu trống thì tìm tiếp giỏ "guest"
+    let cart = await Cart.findOne({ userId });
+    if (!cart || cart.items.length === 0) {
+      cart = await Cart.findOne({ userId: "guest" });
+    }
+
+    const items = cart && cart.items.length > 0 ? cart.items : bodyItems;
 
     if (!customerName || !phone || !address) {
       return res
         .status(400)
         .json({ success: false, message: "Vui lòng nhập đầy đủ thông tin nhận hàng" });
     }
-    if (items.length === 0) {
+    if (!items || items.length === 0) {
       return res.status(400).json({ success: false, message: "Giỏ hàng đang trống" });
     }
 
@@ -35,7 +41,7 @@ export const createOrder = async (req, res) => {
         .json({ success: false, message: "Không xác định được nhà hàng của món ăn" });
     }
 
-    // 2. Đảm bảo userId đúng chuẩn ObjectId (hỗ trợ cả khi chưa đăng nhập)
+    // 2. Đảm bảo userId đúng chuẩn ObjectId
     let validUserId;
     if (mongoose.Types.ObjectId.isValid(userId)) {
       validUserId = userId;
@@ -67,8 +73,12 @@ export const createOrder = async (req, res) => {
       total: subtotal + shippingFee,
     });
 
-    cart.items = [];
-    await cart.save();
+    // Làm trống giỏ hàng sau khi đặt thành công
+    if (cart) {
+      cart.items = [];
+      await cart.save();
+    }
+    await Cart.updateMany({ userId: { $in: [userId, "guest"] } }, { $set: { items: [] } });
 
     res.status(201).json({
       success: true,
