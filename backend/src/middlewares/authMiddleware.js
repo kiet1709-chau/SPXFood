@@ -6,16 +6,24 @@ export const protectedRoute = async (req, res, next) => {
   try {
     // Lấy token từ Header
     const authHeader = req.headers.authorization;
-    const token = authHeader?.split(" ")[1];
 
-    if (!token) {
+    if (!authHeader?.startsWith("Bearer ")) {
       return res.status(401).json({
         message: "Không tìm thấy Access Token.",
       });
     }
 
+    const token = authHeader.split(" ")[1];
+
     // Xác minh JWT
     const decodedUser = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    // Kiểm tra payload
+    if (!decodedUser.userId) {
+      return res.status(401).json({
+        message: "Access Token không hợp lệ.",
+      });
+    }
 
     // Tìm User
     const user = await User.findById(decodedUser.userId);
@@ -44,7 +52,7 @@ export const protectedRoute = async (req, res, next) => {
       });
     }
 
-    if (error.name === "JsonWebTokenError") {
+    if (error.name === "JsonWebTokenError" || error.name === "NotBeforeError") {
       return res.status(401).json({
         message: "Access Token không hợp lệ.",
       });

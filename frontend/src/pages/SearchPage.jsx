@@ -1,18 +1,28 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { fetchFoods } from '../services/api';
-import { useCart } from '../context/CartContext';
+import { useEffect, useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router";
+import { fetchFoods } from "../services/api";
+import { useCart } from "../context/CartContext";
 
-const CATEGORIES = ['All', 'Pizza', 'Burger', 'Noodle', 'Rice', 'Sushi', 'Salad', 'Drink', 'Dessert'];
+const CATEGORIES = [
+  "All",
+  "Pizza",
+  "Burger",
+  "Noodle",
+  "Rice",
+  "Sushi",
+  "Salad",
+  "Drink",
+  "Dessert",
+];
 
 export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialQuery = searchParams.get('q') || '';
-  const initialCategory = searchParams.get('category') || 'All';
+  const initialQuery = searchParams.get("q") || "";
+  const initialCategory = searchParams.get("category") || "All";
 
   const [query, setQuery] = useState(initialQuery);
   const [category, setCategory] = useState(initialCategory);
-  const [sortBy, setSortBy] = useState('default'); // default | price_asc | price_desc | rating_desc
+  const [sortBy, setSortBy] = useState("default"); // default | price_asc | price_desc | rating_desc
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(true);
   const [addedFoodId, setAddedFoodId] = useState(null);
@@ -23,7 +33,7 @@ export default function SearchPage() {
   useEffect(() => {
     const nextParams = {};
     if (query.trim()) nextParams.q = query.trim();
-    if (category && category !== 'All') nextParams.category = category;
+    if (category && category !== "All") nextParams.category = category;
     setSearchParams(nextParams, { replace: true });
   }, [query, category, setSearchParams]);
 
@@ -50,9 +60,10 @@ export default function SearchPage() {
   // Sắp xếp kết quả phía client
   const sortedFoods = useMemo(() => {
     const list = [...foods];
-    if (sortBy === 'price_asc') return list.sort((a, b) => a.price - b.price);
-    if (sortBy === 'price_desc') return list.sort((a, b) => b.price - a.price);
-    if (sortBy === 'rating_desc') return list.sort((a, b) => b.rating - a.rating);
+    if (sortBy === "price_asc") return list.sort((a, b) => a.price - b.price);
+    if (sortBy === "price_desc") return list.sort((a, b) => b.price - a.price);
+    if (sortBy === "rating_desc")
+      return list.sort((a, b) => b.rating - a.rating);
     return list;
   }, [foods, sortBy]);
 
@@ -112,7 +123,8 @@ export default function SearchPage() {
               Tìm kiếm món ăn
             </h1>
             <p className="text-sm text-gray-600">
-              Nhập tên món, mô tả hoặc chọn danh mục để tìm món ăn ngon nhanh chóng.
+              Nhập tên món, mô tả hoặc chọn danh mục để tìm món ăn ngon nhanh
+              chóng.
             </p>
           </div>
 
@@ -129,7 +141,7 @@ export default function SearchPage() {
               {query && (
                 <button
                   type="button"
-                  onClick={() => setQuery('')}
+                  onClick={() => setQuery("")}
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-gray-400 hover:text-gray-700"
                 >
                   ✕
@@ -160,11 +172,11 @@ export default function SearchPage() {
                   onClick={() => setCategory(cat)}
                   className={`rounded-full px-4 py-1.5 text-xs font-semibold transition ${
                     active
-                      ? 'bg-green-600 text-white shadow-sm'
-                      : 'bg-white text-gray-700 hover:bg-green-100 hover:text-green-700'
+                      ? "bg-green-600 text-white shadow-sm"
+                      : "bg-white text-gray-700 hover:bg-green-100 hover:text-green-700"
                   }`}
                 >
-                  {cat === 'All' ? 'Tất cả' : cat}
+                  {cat === "All" ? "Tất cả" : cat}
                 </button>
               );
             })}
@@ -178,13 +190,13 @@ export default function SearchPage() {
               Kết quả tìm kiếm ({sortedFoods.length} món)
             </h2>
 
-            {(query || category !== 'All' || sortBy !== 'default') && (
+            {(query || category !== "All" || sortBy !== "default") && (
               <button
                 type="button"
                 onClick={() => {
-                  setQuery('');
-                  setCategory('All');
-                  setSortBy('default');
+                  setQuery("");
+                  setCategory("All");
+                  setSortBy("default");
                 }}
                 className="text-sm font-medium text-green-600 hover:underline"
               >
@@ -196,15 +208,22 @@ export default function SearchPage() {
           {loading ? (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {[1, 2, 3].map((n) => (
-                <div key={n} className="h-72 animate-pulse rounded-2xl border border-gray-100 bg-gray-50 p-4" />
+                <div
+                  key={n}
+                  className="h-72 animate-pulse rounded-2xl border border-gray-100 bg-gray-50 p-4"
+                />
               ))}
             </div>
           ) : sortedFoods.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-10 text-center">
-              <p className="font-semibold text-gray-700">Không tìm thấy món ăn nào khớp với bộ lọc</p>
+              <p className="font-semibold text-gray-700">
+                Không tìm thấy món ăn nào khớp với bộ lọc
+              </p>
               <p className="mt-1 text-sm text-gray-500">
-                Hãy thử từ khóa khác như <span className="font-medium text-green-700">Pizza</span>,{' '}
-                <span className="font-medium text-green-700">Burger</span> hoặc chọn danh mục{' '}
+                Hãy thử từ khóa khác như{" "}
+                <span className="font-medium text-green-700">Pizza</span>,{" "}
+                <span className="font-medium text-green-700">Burger</span> hoặc
+                chọn danh mục{" "}
                 <span className="font-medium text-green-700">Tất cả</span>.
               </p>
             </div>
@@ -235,21 +254,25 @@ export default function SearchPage() {
                           ★ {Number(food.rating).toFixed(1)}
                         </span>
                       </div>
-                      <p className="mt-1 line-clamp-2 text-xs text-gray-500">{food.desc}</p>
+                      <p className="mt-1 line-clamp-2 text-xs text-gray-500">
+                        {food.desc}
+                      </p>
                     </div>
 
                     <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
                       <span className="text-base font-extrabold text-gray-900">
-                        {Number(food.price).toLocaleString('vi-VN')}đ
+                        {Number(food.price).toLocaleString("vi-VN")}đ
                       </span>
                       <button
                         type="button"
                         onClick={() => handleAddToCart(food.id)}
                         className={`rounded-lg px-3.5 py-2 text-xs font-semibold text-white transition ${
-                          isAdded ? 'bg-emerald-700' : 'bg-green-600 hover:bg-green-700'
+                          isAdded
+                            ? "bg-emerald-700"
+                            : "bg-green-600 hover:bg-green-700"
                         }`}
                       >
-                        {isAdded ? '✓ Đã thêm' : 'Add to cart'}
+                        {isAdded ? "✓ Đã thêm" : "Add to cart"}
                       </button>
                     </div>
                   </article>

@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
+import { Link } from "react-router";
+import { useCart } from "../context/CartContext";
 
 export default function CartPage() {
   const { items, totalAmount, totalCount, updateQuantity } = useCart();
@@ -61,7 +61,9 @@ export default function CartPage() {
 
         {items.length === 0 ? (
           <section className="rounded-3xl border border-dashed border-gray-200 bg-gray-50 p-12 text-center">
-            <h2 className="text-xl font-bold text-gray-800">Giỏ hàng đang trống</h2>
+            <h2 className="text-xl font-bold text-gray-800">
+              Giỏ hàng đang trống
+            </h2>
             <p className="mt-2 text-sm text-gray-500">
               Bạn chưa thêm món ăn nào. Hãy khám phá thực đơn tươi ngon ngay!
             </p>
@@ -88,7 +90,10 @@ export default function CartPage() {
                 <h2 className="border-l-4 border-green-600 pl-3 text-xl font-bold">
                   Món đã chọn ({totalCount} phần)
                 </h2>
-                <Link to="/search" className="text-sm font-semibold text-green-600 hover:underline">
+                <Link
+                  to="/search"
+                  className="text-sm font-semibold text-green-600 hover:underline"
+                >
                   + Chọn thêm món
                 </Link>
               </div>
@@ -108,7 +113,7 @@ export default function CartPage() {
                       <div>
                         <h3 className="font-bold text-gray-900">{item.name}</h3>
                         <p className="mt-0.5 text-sm font-semibold text-green-600">
-                          {Number(item.price).toLocaleString('vi-VN')}đ / phần
+                          {Number(item.price).toLocaleString("vi-VN")}đ / phần
                         </p>
                         <button
                           type="button"
@@ -125,7 +130,9 @@ export default function CartPage() {
                       <div className="flex items-center rounded-xl border border-gray-200 bg-gray-50 p-1">
                         <button
                           type="button"
-                          onClick={() => updateQuantity(item.foodId, item.quantity - 1)}
+                          onClick={() =>
+                            updateQuantity(item.foodId, item.quantity - 1)
+                          }
                           className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-base font-bold text-gray-700 shadow-sm hover:bg-green-50 hover:text-green-700"
                         >
                           −
@@ -135,7 +142,9 @@ export default function CartPage() {
                         </span>
                         <button
                           type="button"
-                          onClick={() => updateQuantity(item.foodId, item.quantity + 1)}
+                          onClick={() =>
+                            updateQuantity(item.foodId, item.quantity + 1)
+                          }
                           className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-600 text-base font-bold text-white shadow-sm hover:bg-green-700"
                         >
                           +
@@ -145,7 +154,8 @@ export default function CartPage() {
                       <div className="min-w-24 text-right">
                         <p className="text-xs text-gray-400">Thành tiền</p>
                         <p className="font-extrabold text-gray-900">
-                          {(item.price * item.quantity).toLocaleString('vi-VN')}đ
+                          {(item.price * item.quantity).toLocaleString("vi-VN")}
+                          đ
                         </p>
                       </div>
                     </div>
@@ -156,15 +166,21 @@ export default function CartPage() {
 
             {/* Cột tóm tắt hóa đơn */}
             <aside className="h-fit space-y-5 rounded-3xl border border-green-100 bg-green-50/60 p-6">
-              <h2 className="text-lg font-bold text-gray-900">Tóm tắt đơn hàng</h2>
+              <h2 className="text-lg font-bold text-gray-900">
+                Tóm tắt đơn hàng
+              </h2>
 
               {remainingForFreeShip > 0 ? (
                 <div className="rounded-xl bg-white p-3 text-xs text-gray-600 shadow-sm">
-                  Mua thêm{' '}
+                  Mua thêm{" "}
                   <span className="font-bold text-green-600">
-                    {remainingForFreeShip.toLocaleString('vi-VN')}đ
-                  </span>{' '}
-                  để được <span className="font-bold text-green-700">Miễn phí giao hàng</span>!
+                    {remainingForFreeShip.toLocaleString("vi-VN")}đ
+                  </span>{" "}
+                  để được{" "}
+                  <span className="font-bold text-green-700">
+                    Miễn phí giao hàng
+                  </span>
+                  !
                 </div>
               ) : (
                 <div className="rounded-xl bg-green-600/10 p-3 text-xs font-semibold text-green-700">
@@ -176,18 +192,22 @@ export default function CartPage() {
                 <div className="flex justify-between text-gray-600">
                   <span>Tạm tính</span>
                   <span className="font-semibold text-gray-900">
-                    {totalAmount.toLocaleString('vi-VN')}đ
+                    {totalAmount.toLocaleString("vi-VN")}đ
                   </span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Phí giao hàng</span>
                   <span className="font-semibold text-green-700">
-                    {shippingFee === 0 ? 'Miễn phí' : `${shippingFee.toLocaleString('vi-VN')}đ`}
+                    {shippingFee === 0
+                      ? "Miễn phí"
+                      : `${shippingFee.toLocaleString("vi-VN")}đ`}
                   </span>
                 </div>
                 <div className="flex justify-between border-t border-green-200/70 pt-3 text-base font-extrabold text-gray-900">
                   <span>Tổng cộng</span>
-                  <span className="text-green-700">{finalTotal.toLocaleString('vi-VN')}đ</span>
+                  <span className="text-green-700">
+                    {finalTotal.toLocaleString("vi-VN")}đ
+                  </span>
                 </div>
               </div>
 

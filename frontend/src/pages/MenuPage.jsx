@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router';
 import { fetchFoods, fetchRestaurants } from '../services/api';
 import { useCart } from '../context/CartContext';
 

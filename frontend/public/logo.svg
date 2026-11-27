@@ -1,0 +1,35 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bag" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#34d399"></stop>
+      <stop offset="100%" stop-color="#059669"></stop>
+    </linearGradient>
+    <linearGradient id="side" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#047857"></stop>
+      <stop offset="100%" stop-color="#065f46"></stop>
+    </linearGradient>
+  </defs>
+
+  <!-- Handle -->
+  <path d="M43 39V29c0-10 7-17 17-17s17 7 17 17v10" fill="none" stroke="#047857" stroke-width="9" stroke-linecap="round"></path>
+
+  <path d="M49 39V29c0-6 4-10 11-10s11 4 11 10v10" fill="none" stroke="#6ee7b7" stroke-width="3" stroke-linecap="round"></path>
+
+  <!-- Bag -->
+  <path d="M25 38h78l9 58c1 9-5 16-14 17H34c-9-1-15-8-14-17z" fill="url(#bag)" stroke="#047857" stroke-width="4" stroke-linejoin="round"></path>
+
+  <path d="m25 40-9 49c-2 10 3 18 12 22l9 3-8-76z" fill="url(#side)"></path>
+
+  <!-- Face -->
+  <ellipse cx="49" cy="72" rx="4.5" ry="6" fill="#064e3b"></ellipse>
+  <ellipse cx="81" cy="72" rx="4.5" ry="6" fill="#064e3b"></ellipse>
+  <path d="M57 84q8 9 16 0" fill="none" stroke="#064e3b" stroke-width="4" stroke-linecap="round"></path>
+
+  <ellipse cx="39" cy="83" rx="6" ry="3.5" fill="#fda4af" opacity=".8"></ellipse>
+  <ellipse cx="91" cy="83" rx="6" ry="3.5" fill="#fda4af" opacity=".8"></ellipse>
+
+  <!-- Leaf -->
+  <path d="M91 24q13-14 22-3-3 15-22 13" fill="#84cc16" stroke="#15803d" stroke-width="2"></path>
+  <path d="M93 32q8-7 16-10" fill="none" stroke="#ecfccb" stroke-width="2" stroke-linecap="round"></path>
+</svg>
