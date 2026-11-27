@@ -1,27 +1,36 @@
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function ProfilePage() {
-  const { user, updateProfile, logout } = useAuth();
+  const navigate = useNavigate();
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
-  const [form, setForm] = useState({
-    displayName: user.displayName || user.username || '',
-    email: user.email || '',
-    phone: user.phone || '',
-    address: user.address || ''
+  const [form, setForm] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('spxfood_profile') || '{}');
+      return {
+        displayName: saved.displayName || '',
+        email: saved.email || '',
+        phone: saved.phone || '',
+        address: saved.address || ''
+      };
+    } catch {
+      return { displayName: '', email: '', phone: '', address: '' };
+    }
   });
   const [savedToast, setSavedToast] = useState(false);
 
   const handleSave = (e) => {
     e.preventDefault();
-    updateProfile(form);
+    localStorage.setItem('spxfood_profile', JSON.stringify(form));
     setSavedToast(true);
     setTimeout(() => setSavedToast(false), 3000);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('spxfood_profile');
+    localStorage.removeItem('spxfood_user');
+    setForm({ displayName: '', email: '', phone: '', address: '' });
+    navigate('/');
   };
 
   return (
@@ -30,21 +39,23 @@ export default function ProfilePage() {
         {/* Cột trái: Thẻ thông tin đại diện */}
         <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col items-center text-center h-fit">
           <div className="w-24 h-24 rounded-full bg-[#246B4B] text-white flex items-center justify-center text-3xl font-extrabold shadow-md">
-            {(form.displayName || 'U').charAt(0).toUpperCase()}
+            {(form.displayName || 'K').charAt(0).toUpperCase()}
           </div>
-          <h2 className="text-lg font-bold text-gray-800 mt-4">{form.displayName}</h2>
-          <p className="text-sm text-gray-500">{form.email || 'Chưa cập nhật email'}</p>
+          <h2 className="text-lg font-bold text-gray-800 mt-4">
+            {form.displayName || 'Khách hàng SPXFood'}
+          </h2>
+          <p className="text-sm text-gray-500">{form.phone || 'Chưa cập nhật SĐT'}</p>
 
           <span className="mt-3 inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-[#246B4B]">
-            Thành viên SPXFood
+            Thông tin giao hàng mặc định
           </span>
 
           <button
             type="button"
-            onClick={logout}
+            onClick={handleLogout}
             className="mt-6 w-full py-2.5 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 text-sm font-semibold transition"
           >
-            Đăng xuất tài khoản
+            Đăng xuất
           </button>
         </div>
 
@@ -54,7 +65,7 @@ export default function ProfilePage() {
             <div>
               <h1 className="text-xl font-bold text-gray-800">Thông tin tài khoản</h1>
               <p className="text-sm text-gray-500 mt-0.5">
-                Quản lý thông tin cá nhân và địa chỉ giao hàng mặc định
+                Lưu sẵn thông tin cá nhân và địa chỉ giao hàng để tự động điền khi đặt món
               </p>
             </div>
             {savedToast && (
@@ -73,6 +84,7 @@ export default function ProfilePage() {
                   required
                   value={form.displayName}
                   onChange={(e) => setForm({ ...form, displayName: e.target.value })}
+                  placeholder="Nguyễn Văn A"
                   className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#246B4B] focus:ring-2 focus:ring-emerald-100 outline-none text-sm"
                 />
               </div>
@@ -95,6 +107,7 @@ export default function ProfilePage() {
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
+                placeholder="email@example.com"
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#246B4B] focus:ring-2 focus:ring-emerald-100 outline-none text-sm"
               />
             </div>

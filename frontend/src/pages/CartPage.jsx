@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
 import { createOrderApi } from '../services/api';
 
 const PAYMENT_METHODS = [
@@ -12,8 +11,6 @@ const PAYMENT_METHODS = [
 
 export default function CartPage() {
   const { items, totalAmount, totalCount, updateQuantity, refreshCart } = useCart();
-  const auth = useAuth();
-  const user = auth?.user;
 
   const [customerName, setCustomerName] = useState('');
   const [phone, setPhone] = useState('');
@@ -25,16 +22,17 @@ export default function CartPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const [createdOrder, setCreatedOrder] = useState(null);
 
-  // Tự động điền thông tin người nhận nếu đã lưu ở trang Tài khoản
+  // Tự động điền thông tin người nhận nếu đã lưu ở trang Thông tin tài khoản
   useEffect(() => {
-    if (user) {
-      if (!customerName && (user.fullName || user.displayName || user.username)) {
-        setCustomerName(user.fullName || user.displayName || user.username);
-      }
-      if (!phone && user.phone) setPhone(user.phone);
-      if (!address && user.address) setAddress(user.address);
+    try {
+      const saved = JSON.parse(localStorage.getItem('spxfood_profile') || '{}');
+      if (saved.displayName) setCustomerName(saved.displayName);
+      if (saved.phone) setPhone(saved.phone);
+      if (saved.address) setAddress(saved.address);
+    } catch {
+      // Bỏ qua nếu chưa có dữ liệu lưu trước đó
     }
-  }, [user]);
+  }, []);
 
   const shippingFee = totalAmount === 0 || totalAmount >= 100000 ? 0 : 15000;
   const finalTotal = totalAmount + shippingFee;
@@ -57,7 +55,7 @@ export default function CartPage() {
     setSubmitting(true);
     try {
       const res = await createOrderApi({
-        userId: user?._id || user?.id || 'guest',
+        userId: 'guest',
         customerName: customerName.trim(),
         phone: phone.trim(),
         address: address.trim(),
@@ -263,11 +261,9 @@ export default function CartPage() {
                     <h2 className="border-l-4 border-[#246B4B] pl-3 text-lg font-bold">
                       2. Thông tin người nhận
                     </h2>
-                    {user && (
-                      <Link to="/profile" className="text-xs font-semibold text-[#246B4B] hover:underline">
-                        Sửa địa chỉ mặc định
-                      </Link>
-                    )}
+                    <Link to="/profile" className="text-xs font-semibold text-[#246B4B] hover:underline">
+                      Sửa địa chỉ mặc định
+                    </Link>
                   </div>
 
                   {errorMsg && (
